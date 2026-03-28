@@ -11,10 +11,6 @@ from datetime import timedelta, datetime,timezone
 from jose import jwt, JWTError
 
 
-
-
-
-
 router=APIRouter(
     prefix='/auth',
     tags=['auth']
@@ -64,21 +60,22 @@ class Token(BaseModel):
 
 
 
-def create_access_token(username: str, user_id: int, expires_delta: timedelta):
-    encode={'sub': username, 'id': user_id}
+def create_access_token(username: str, user_id: int,role: str, expires_delta: timedelta):
+    encode={'sub': username, 'id': user_id, 'role': role}
     expires=datetime.now(timezone.utc)+expires_delta
     encode.update({'exp': expires})
     return jwt.encode(encode, SECRET_KEY,algorithm=ALGORITHM)
 
-@router.get("/curren_user",status_code= status.HTTP_200_OK)
+@router.get("/current_user",status_code= status.HTTP_200_OK)
 async def get_current_user(token: Annotated[str, Depends(oauth2_bearer)]):
     try:
         payload=jwt.decode(token,SECRET_KEY, algorithms=[ALGORITHM])
         username: str=payload.get('sub')
         user_id: str=payload.get('id')
+        user_role: str=payload.get('role')
         if username is None or user_id is None:
             raise HTTPException(status_code= status.HTTP_401_UNAUTHORIZED, detail= 'Could not validate user.')
-        return {'username': username, 'id': user_id}
+        return {'username': username, 'id': user_id, 'user_role':user_role}
     except JWTError:
         raise HTTPException(status_code= status.HTTP_401_UNAUTHORIZED, detail= 'Could not validate user.')
 
@@ -105,5 +102,5 @@ async def login_for_acess_token(form_data: Annotated[OAuth2PasswordRequestForm, 
     user=authenticate_user(form_data.username,form_data.password, db)
     if not user:
         raise HTTPException(status_code= status.HTTP_401_UNAUTHORIZED, detail= 'Could not validate user.')
-    token=create_access_token(user.username,user.id,timedelta(minutes=20))
+    token=create_access_token(user.username,user.id,user.role,timedelta(minutes=20))
     return {'access_token': token, 'token_type':'bearer'}

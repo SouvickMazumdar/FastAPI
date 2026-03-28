@@ -12,7 +12,7 @@ import models  # To access Base for table creation
 # # Import engine and SessionLocal for DB connection
 from database import engine # DB engine and session factory
 
-from routers import auth, todos
+from routers import auth, todos, admin, users
 
 # Create FastAPI app instance
 app = FastAPI()  # Initialize FastAPI app
@@ -21,4 +21,6 @@ models.Base.metadata.create_all(bind=engine)  # Create tables from models
 
 app.include_router(auth.router)
 app.include_router(todos.router)
+app.include_router(admin.router)
+app.include_router(users.router)
 

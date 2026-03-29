@@ -24,3 +24,26 @@ CREATE TABLE todos (
 	PRIMARY KEY (id),
 	FOREIGN KEY (owner_id) REFERENCES users(id)
 );
+
+
+# Alembic
+==Commands
+pip install Alembic
+alembic init alembic
+
+==Inside alembic.ini
+change sqlalchemy.url with your own database url
+
+==Inside env.py
+import models
+remove (if config.config_file_name is not None:) but keep the statement present inside the if
+target_metadata=models.Base.metadata
+
+==Commands
+alembic revision -m "Create phone number for user column" 
+
+alembic upgrade <revision id>
+op.add_column('users', sa.Column('phone_number', sa.String(), nullable=True))
+
+alembic dowgrade -1
+op.drop_column('users','phone_number')

@@ -6,7 +6,7 @@ This file defines the SQLAlchemy ORM model for the 'todos' table used in the Fas
 It imports the necessary base class and column types, and creates the Todos class which maps to the database table.
 """
 
-from database import Base  # Import the SQLAlchemy Base class from the database module
+from .database import Base  # Import the SQLAlchemy Base class from the database module
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey  # Import column types from SQLAlchemy
 
 

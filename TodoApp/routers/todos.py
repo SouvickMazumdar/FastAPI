@@ -9,11 +9,11 @@ from fastapi import APIRouter, Depends, HTTPException, Path  # FastAPI framework
 # Import Session for database session management
 from sqlalchemy.orm import Session  # SQLAlchemy session for DB operations
 # Import the Todos model from models.py
-from models import Todos  # ORM model for todo items
+from ..models import Todos  # ORM model for todo items
 # Import Annotated for type hinting with dependencies
 from typing import Annotated  # For advanced type hints
 # Import engine and SessionLocal for DB connection
-from database import SessionLocal  # DB engine and session factory
+from ..database import SessionLocal  # DB engine and session factory
 from starlette import status
 from pydantic import BaseModel, Field
 

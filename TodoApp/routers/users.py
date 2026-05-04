@@ -23,7 +23,7 @@ pwd_context=CryptContext(schemes=["bcrypt"],deprecated="auto")
 
 class Password(BaseModel):
     old_password: str
-    new_pasword: str= Field(min_length=6)
+    new_password: str= Field(min_length=6)
     confirm_password: str
 
 # class Phone_number(BaseModel):
@@ -65,16 +65,16 @@ async def change_password(user: user_dependency, db: db_dependency, password: Pa
         raise HTTPException(status_code=404, detail="User not found")
     if not pwd_context.verify(password.old_password,user_row.hashed_password):
         raise HTTPException(status_code=401, detail="Wrong old Password")
-    if password.new_pasword!=password.confirm_password:
+    if password.new_password!=password.confirm_password:
         raise HTTPException(status_code=404, detail="New pasword mismatched")
-    user_row.hashed_password=pwd_context.hash(password.new_pasword)
+    user_row.hashed_password=pwd_context.hash(password.new_password)
     db.add(user_row)
     db.commit()
     db.refresh(user_row)
     return {"detail": "Password updated successfully"}
 
 
-@router.put("/update_phone_number", status_code= status.HTTP_200_OK)
+@router.put("/update_phone_number", status_code= status.HTTP_204_NO_CONTENT)
 
 # async def update_phone_number(user: user_dependency, db: db_dependency, phone: Phone_number):
 async def update_phone_number(user: user_dependency, db: db_dependency, phone_number: str):
@@ -88,7 +88,7 @@ async def update_phone_number(user: user_dependency, db: db_dependency, phone_nu
     db.add(user_row)
     db.commit()
     db.refresh(user_row)
-    return {"detail": "Phone Number updated successfully"}
+    return None
 
     
     

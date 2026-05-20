@@ -15,11 +15,15 @@ from .models import Base  # To access Base for table creation
 from .database import engine # DB engine and session factory
 
 from .routers import auth, todos, admin, users
+from fastapi.templating import Jinja2Templates
+
 
 # Create FastAPI app instance
 app = FastAPI()  # Initialize FastAPI app
 # Create all tables in the database (if not already created)
 Base.metadata.create_all(bind=engine)  # Create tables from models
+
+templates=Jinja2Templates(directory= "TodoApp/templates")
 
 @app.get("/healthy")
 def health_check():

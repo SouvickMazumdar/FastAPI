@@ -20,7 +20,10 @@ from pydantic import BaseModel, Field
 from .auth import get_current_user
 
 # Create FastAPI app instance
-router = APIRouter()  # Initialize FastAPI app
+router = APIRouter(
+    prefix='/todos',
+    tags=['todos']
+)  # Initialize FastAPI app
 
 # Dependency function to get a database session
 def get_db():  # Provides a database session to endpoints

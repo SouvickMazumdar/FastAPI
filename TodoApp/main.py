@@ -7,7 +7,7 @@ It includes database connection management, dependency injection, and a simple G
 
 
 # Import FastAPI and Depends for API creation and dependency injection
-from fastapi import FastAPI  # FastAPI framework and dependency injection
+from fastapi import FastAPI,Request  # FastAPI framework and dependency injection
 
 # # Import models to access Base for metadata
 from .models import Base  # To access Base for table creation
@@ -25,6 +25,11 @@ Base.metadata.create_all(bind=engine)  # Create tables from models
 
 templates=Jinja2Templates(directory= "TodoApp/templates")
 
+
+
+@app.get("/")
+def test(request: Request):
+    return templates.TemplateResponse("home.html",{"request":request})
 @app.get("/healthy")
 def health_check():
     return {'status': 'Healthy'}

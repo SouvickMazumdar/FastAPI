@@ -16,7 +16,7 @@ from .database import engine # DB engine and session factory
 
 from .routers import auth, todos, admin, users
 from fastapi.templating import Jinja2Templates
-
+from fastapi.staticfiles import StaticFiles
 
 # Create FastAPI app instance
 app = FastAPI()  # Initialize FastAPI app
@@ -24,6 +24,9 @@ app = FastAPI()  # Initialize FastAPI app
 Base.metadata.create_all(bind=engine)  # Create tables from models
 
 templates=Jinja2Templates(directory= "TodoApp/templates")
+
+
+app.mount("/static",StaticFiles(directory="TodoApp/static"), name="static")
 
 
 

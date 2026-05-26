@@ -18,6 +18,11 @@ from starlette import status
 from pydantic import BaseModel, Field
 
 from .auth import get_current_user
+from starlette.responses import RedirectResponse
+from fastapi.templating import Jinja2Templates
+
+
+templates=Jinja2Templates(directory="TodoApp/templates")
 
 # Create FastAPI app instance
 router = APIRouter(
@@ -45,6 +50,16 @@ class TodoRequest(BaseModel):
     complete: bool
 
 
+
+
+
+### Pages ###
+# @router.get("/todo-page")
+# async def render_todo_page()
+
+
+
+### Endpoints ###
 # Define the root endpoint to read all todos
 @router.get("/", status_code=status.HTTP_200_OK)  # HTTP GET endpoint at root URL
 async def read_all(user: user_dependency,db: db_dependency):  # Inject DB session dependency

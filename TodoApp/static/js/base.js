@@ -148,10 +148,10 @@
                 if (response.ok) {
                     // Handle success (e.g., redirect to dashboard)
                     const data = await response.json();
-                    // Delete any cookies available
+                    // Delete any cookies available, to avoid duplicate cookies
                     logout();
                     // Save token to cookie
-                    document.cookie = `access_token=${data.access_token}; path=/`;
+                    document.cookie = `access_token=${data.access_token}; path=/`;//will live throughout the session
                     window.location.href = '/todos/todo-page'; // Change this to your desired redirect page
                 } else {
                     // Handle error

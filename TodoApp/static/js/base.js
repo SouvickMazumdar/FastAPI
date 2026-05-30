@@ -3,7 +3,6 @@
     if (todoForm) {
         todoForm.addEventListener('submit', async function (event) {
             event.preventDefault();
-
             const form = event.target;
             const formData = new FormData(form);
             const data = Object.fromEntries(formData.entries());
@@ -12,9 +11,9 @@
                 title: data.title,
                 description: data.description,
                 priority: parseInt(data.priority),
-                complete: false
+                complete: false,
             };
-
+            
             try {
                 const response = await fetch('/todos/todo', {
                     method: 'POST',
@@ -26,11 +25,17 @@
                 });
 
                 if (response.ok) {
-                    form.reset(); // Clear the form
+                    // form.reset(); // Clear the form
+                    window.location.href = '/todos/todo-page';
                 } else {
                     // Handle error
                     const errorData = await response.json();
-                    alert(`Error: ${errorData.detail}`);
+                    let errorMsg = errorData.detail;
+                    if (Array.isArray(errorMsg)) {
+                        // Format FastAPI validation errors into a readable string
+                        errorMsg = errorMsg.map(err => `${err.loc[err.loc.length - 1]}: ${err.msg}`).join('\n');
+                    }
+                    alert(`Error:\n${errorMsg}`);
                 }
             } catch (error) {
                 console.error('Error:', error);
@@ -80,7 +85,12 @@
             } else {
                 // Handle error
                 const errorData = await response.json();
-                alert(`Error: ${errorData.detail}`);
+                let errorMsg = errorData.detail;
+                if (Array.isArray(errorMsg)) {
+                    // Format FastAPI validation errors into a readable string
+                    errorMsg = errorMsg.map(err => `${err.loc[err.loc.length - 1]}: ${err.msg}`).join('\n');
+                }
+                alert(`Error:\n${errorMsg}`);
             }
         } catch (error) {
             console.error('Error:', error);

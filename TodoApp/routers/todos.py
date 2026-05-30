@@ -5,7 +5,7 @@ It includes database connection management, dependency injection, and a simple G
 """
 
 # Import FastAPI and Depends for API creation and dependency injection
-from fastapi import APIRouter, Depends, HTTPException, Path  # FastAPI framework and dependency injection
+from fastapi import APIRouter, Depends, HTTPException, Path, Request,status  # FastAPI framework and dependency injection
 # Import Session for database session management
 from sqlalchemy.orm import Session  # SQLAlchemy session for DB operations
 # Import the Todos model from models.py
@@ -49,13 +49,26 @@ class TodoRequest(BaseModel):
     priority: int = Field(gt=0, lt=6)
     complete: bool
 
-
-
+def redirect_to_login():
+    redirect_response=RedirectResponse(url="/auth/login-page",status_code=status.HTTP_302_FOUND)
+    redirect_response.delete_cookie(key="access_token")
+    print(redirect_response)
+    return redirect_response
 
 
 ### Pages ###
-# @router.get("/todo-page")
-# async def render_todo_page()
+
+@router.get("/todo-page")
+async def render_todo_page(request: Request, db: db_dependency):
+    try:
+        user=await get_current_user(request.cookies.get('access_token'))
+        if user is None:
+            return redirect_to_login()
+        todos=db.query(Todos).filter(Todos.owner_id==user.get("id")).all()
+        print(todos)
+        return templates.TemplateResponse("todo.html", {"request":request, "todos":todos, "user":user})
+    except:
+        return redirect_to_login()
 
 
 

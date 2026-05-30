@@ -32,6 +32,8 @@ app.mount("/static",StaticFiles(directory="TodoApp/static"), name="static")
 
 @app.get("/")
 def test(request: Request):
+    # This is called template rendering <{"request":request}> this context can be used inside the webpage, when this webpage is rendered
+    # throough endpoint you can pass only the json but through template rendering you can pass the values
     return templates.TemplateResponse("home.html",{"request":request})
 @app.get("/healthy")
 def health_check():

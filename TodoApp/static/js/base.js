@@ -23,9 +23,9 @@
                     },
                     body: JSON.stringify(payload)
                 });
-
+                
                 if (response.ok) {
-                    // form.reset(); // Clear the form
+                    console.log("Todo created successfully");
                     window.location.href = '/todos/todo-page';
                 } else {
                     // Handle error

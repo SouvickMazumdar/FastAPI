@@ -81,6 +81,16 @@ async def render_add_todo_page(request: Request):
         return redirect_to_login()
 
 
+@router.get("/edit-todo-page/{todo_id}")
+async def render_edit_todo_page(request: Request, todo_id: int, db: db_dependency):
+    try:
+        user=await get_current_user(request.cookies.get('access_token'))
+        if user is None:
+            return redirect_to_login()
+        todo= db.query(Todos).filter(Todos.id==todo_id).first()
+        return templates.TemplateResponse("edit-todo.html",{"request":request, "todo": todo,"user":user})
+    except:
+        return redirect_to_login()
 
 ### Endpoints ###
 # Define the root endpoint to read all todos
@@ -108,7 +118,7 @@ async def read_todo(user: user_dependency,db: db_dependency, todo_id: int = Path
 async def create_todo(user: user_dependency,db: db_dependency, todo_request: TodoRequest):
     if user is None:
         raise HTTPException(status_code=401, detail='Authentication failed')
-    print("sssssssssssssssssssssssssssssssssssssssssssssssssssss")
+    # print("sssssssssssssssssssssssssssssssssssssssssssssssssssss")
     todo_model=Todos(**todo_request.model_dump(),owner_id=user.get('id'))
     print(todo_model)
     db.add(todo_model)

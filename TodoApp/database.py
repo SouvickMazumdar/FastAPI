@@ -1,13 +1,19 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-# SQLALCHEMY_DATABASE_URL = 'sqlite:///./todos.db'
-SQLALCHEMY_DATABASE_URL = 'postgresql://postgres:Souvick2002#@localhost/TodoApplicationDatabase' #for this server we are using the super password 
-engine = create_engine(
-	SQLALCHEMY_DATABASE_URL
-	# connect_args={"check_same_thread": False} # only for sqllite3
+from pathlib import Path
 
-)
+# Place the SQLite file inside the TodoApp package directory so it's created
+# at d:/Learning_2026/FastAPI/TodoApp/todos.db regardless of the current
+# working directory used to start the server.
+BASE_DIR = Path(__file__).resolve().parent
+DB_PATH = BASE_DIR / "todos.db"
+SQLALCHEMY_DATABASE_URL = f"sqlite:///{DB_PATH.as_posix()}"
+# SQLALCHEMY_DATABASE_URL = 'postgresql://postgres:Souvick2002#@localhost/TodoApplicationDatabase' #for this server we are using the super password 
+engine = create_engine (
+	SQLALCHEMY_DATABASE_URL,
+	connect_args={"check_same_thread": False} # only for sqllite3
+    )
 
 """
 The 'connect_args' parameter is used to configure the database connection.
